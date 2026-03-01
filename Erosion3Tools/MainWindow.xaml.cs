@@ -40,6 +40,7 @@ namespace Erosion3Tools
                         _excelPath = path;
                         _jsonPath = Path.ChangeExtension(_excelPath, ".json");
                         TxtTip.Text = $"已选择文件：{Path.GetFileName(_excelPath)}";
+                        TryAutoDetectMapDimensions();
                         Debug.WriteLine($"文件已选择: {_excelPath}");
                     }
                     else
@@ -93,8 +94,7 @@ namespace Erosion3Tools
                 return;
             }
 
-            // 兼容当前地图转换逻辑（历史原因：参数顺序为 cols, rows）。
-            var data = ExcelReader.ReadExcelColors(_excelPath, cols, rows);
+            var data = ExcelReader.ReadExcelColors(_excelPath, rows, cols);
             if (data.Count == 0 || data[0].Count == 0)
             {
                 MessageBox.Show("未读取到任何地图数据，请检查Excel文件格式");
@@ -126,6 +126,7 @@ namespace Erosion3Tools
         {
             _convertType = ConvertTypeComboBox.SelectedIndex == 1 ? ConvertType.EnemyData : ConvertType.Map;
             UpdateUiByConvertType();
+            TryAutoDetectMapDimensions();
         }
 
         private void UpdateUiByConvertType()
@@ -148,7 +149,7 @@ namespace Erosion3Tools
                 TxtTip.Text = string.IsNullOrWhiteSpace(_excelPath)
                     ? "请拖入 .xlsx 文件（地图）"
                     : $"已选择文件：{Path.GetFileName(_excelPath)}";
-                BottomTipTextBlock.Text = "提示：行列数需与地图 Excel 表格一致";
+                BottomTipTextBlock.Text = "提示：拖入地图 Excel 会自动检测行列数（可手动修改）";
             }
             else
             {
@@ -156,6 +157,33 @@ namespace Erosion3Tools
                     ? "请拖入 .xlsx 文件（敌人数据）"
                     : $"已选择文件：{Path.GetFileName(_excelPath)}";
                 BottomTipTextBlock.Text = "提示：敌人表第一行是字段名，第一列是EnemyId";
+            }
+        }
+
+        private void TryAutoDetectMapDimensions()
+        {
+            if (_convertType != ConvertType.Map || string.IsNullOrWhiteSpace(_excelPath))
+            {
+                return;
+            }
+
+            try
+            {
+                if (ExcelReader.TryDetectWorksheetDimensions(_excelPath, out int detectedRows, out int detectedCols))
+                {
+                    RowTextBox.Text = detectedRows.ToString();
+                    ColTextBox.Text = detectedCols.ToString();
+                    BottomTipTextBlock.Text = $"已自动检测：{detectedRows} 行 x {detectedCols} 列（可手动修改）";
+                }
+                else
+                {
+                    BottomTipTextBlock.Text = "未检测到有效区域，请手动填写行列数";
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"自动检测地图维度失败: {ex}");
+                BottomTipTextBlock.Text = "自动检测失败，请手动填写行列数";
             }
         }
     }

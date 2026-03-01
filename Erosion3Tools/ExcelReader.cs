@@ -17,6 +17,37 @@ namespace Erosion3Tools
 
     public static class ExcelReader
     {
+        public static bool TryDetectWorksheetDimensions(string path, out int rows, out int cols)
+        {
+            rows = 0;
+            cols = 0;
+
+            using (var workbook = new XLWorkbook(path))
+            {
+                var ws = workbook.Worksheets.FirstOrDefault();
+                if (ws == null)
+                {
+                    return false;
+                }
+
+                // 地图表可能只靠颜色标记，使用 All 可以把仅有样式的单元格也纳入检测。
+                var usedRange = ws.RangeUsed(XLCellsUsedOptions.All);
+                if (usedRange == null)
+                {
+                    return false;
+                }
+
+                int firstRow = usedRange.RangeAddress.FirstAddress.RowNumber;
+                int lastRow = usedRange.RangeAddress.LastAddress.RowNumber;
+                int firstCol = usedRange.RangeAddress.FirstAddress.ColumnNumber;
+                int lastCol = usedRange.RangeAddress.LastAddress.ColumnNumber;
+
+                rows = lastRow - firstRow + 1;
+                cols = lastCol - firstCol + 1;
+                return rows > 0 && cols > 0;
+            }
+        }
+
         public static List<List<CellData>> ReadExcelColors(string path, int rows, int cols)
         {
             var result = new List<List<CellData>>();
