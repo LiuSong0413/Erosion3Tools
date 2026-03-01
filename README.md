@@ -81,9 +81,6 @@ Erosion3Tools/
 
 ## 主要特性
 
-### ✨ 用户体验优化
-- **实时反馈**：转换进度实时显示
-- **智能提示**：根据数据自动推荐行列数
 - **拖拽上传**：支持直接拖入文件，无需文件对话框
 
 ### 🔧 数据处理
@@ -103,20 +100,6 @@ Erosion3Tools/
     ...
   ]
 }
-```
-
-## 开发指南
-
-### 环境设置
-```bash
-# 安装依赖
-dotnet restore
-
-# 开发模式运行
-dotnet run --project Erosion3Tools/Erosion3Tools.csproj
-
-# 发布生成
-dotnet publish -c Release -r win-x64 --self-contained
 ```
 
 ### 扩展开发
@@ -148,25 +131,6 @@ dotnet publish -c Release -r win-x64 --self-contained
 - HEX 格式：`#FF0000`、`#F00`
 - RGB 单元格填充颜色
 - 颜色名称映射（100+ 种）
-
-## 许可证
-
-MIT License - 详见 LICENSE 文件
-
-## 贡献指南
-
-欢迎提交 Issue 或 Pull Request！
-
-1. Fork 本仓库
-2. 创建特性分支：`git checkout -b feature/YourFeature`
-3. 提交更改：`git commit -m 'Add YourFeature'`
-4. 推送到分支：`git push origin feature/YourFeature`
-5. 发起 Pull Request
-
-## 联系方式
-
-- **GitHub Issues**：用于报告 bug 或建议新功能
-- **邮箱**：通过 GitHub 联系项目维护者
 
 ---
 
