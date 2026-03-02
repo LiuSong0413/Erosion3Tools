@@ -112,14 +112,14 @@ namespace Erosion3Tools
             var data = ExcelReader.ReadEnemyData(_excelPath);
             if (data.Count == 0)
             {
-                MessageBox.Show("未读取到任何敌人数据，请检查Excel文件格式（第一行字段名，第一列敌人ID）");
+                MessageBox.Show("未读取到任何数据，请检查Excel文件格式（第一行字段名，第一列主键ID）");
                 return;
             }
 
             string jsonText = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(_jsonPath, jsonText, Encoding.UTF8);
 
-            MessageBox.Show($"敌人数据转换成功！\n已生成文件：{_jsonPath}\n\n敌人数量：{data.Count}");
+            MessageBox.Show($"敌人/事件数据转换成功！\n已生成文件：{_jsonPath}\n\n条目数量：{data.Count}");
         }
 
         private void ConvertTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -154,9 +154,9 @@ namespace Erosion3Tools
             else
             {
                 TxtTip.Text = string.IsNullOrWhiteSpace(_excelPath)
-                    ? "请拖入 .xlsx 文件（敌人数据）"
+                    ? "请拖入 .xlsx 文件（敌人或地图事件数据）"
                     : $"已选择文件：{Path.GetFileName(_excelPath)}";
-                BottomTipTextBlock.Text = "提示：敌人表第一行是字段名，第一列是EnemyId";
+                BottomTipTextBlock.Text = "提示：第一行是字段名，第一列是主键ID（如 EnemyId/EventID）";
             }
         }
 

@@ -154,9 +154,14 @@ namespace Erosion3Tools
                 int firstCol = usedRange.RangeAddress.FirstAddress.ColumnNumber;
                 int lastCol = usedRange.RangeAddress.LastAddress.ColumnNumber;
 
-                // 默认第一列是敌人 ID，第一行是字段名。
+                // 默认第一列是主键（敌人ID或事件ID），第一行是字段名。
                 int idCol = firstCol;
                 int headerRow = firstRow;
+                string idKey = ws.Cell(headerRow, idCol).GetString().Trim();
+                if (string.IsNullOrWhiteSpace(idKey))
+                {
+                    idKey = "EnemyId";
+                }
 
                 var headers = new List<(int colIndex, string key)>();
                 for (int col = idCol + 1; col <= lastCol; col++)
@@ -170,15 +175,15 @@ namespace Erosion3Tools
 
                 for (int row = headerRow + 1; row <= lastRow; row++)
                 {
-                    string enemyId = ws.Cell(row, idCol).GetString().Trim();
-                    if (string.IsNullOrWhiteSpace(enemyId))
+                    string idValue = ws.Cell(row, idCol).GetString().Trim();
+                    if (string.IsNullOrWhiteSpace(idValue))
                     {
                         continue;
                     }
 
                     var enemyData = new Dictionary<string, object>
                     {
-                        ["EnemyId"] = enemyId
+                        [idKey] = idValue
                     };
 
                     foreach (var (colIndex, key) in headers)

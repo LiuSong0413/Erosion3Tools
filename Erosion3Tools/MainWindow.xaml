@@ -252,7 +252,7 @@
                               SelectionChanged="ConvertTypeComboBox_SelectionChanged"
                               SelectedIndex="0">
                         <ComboBoxItem Content="地图数据"/>
-                        <ComboBoxItem Content="敌人数据"/>
+                        <ComboBoxItem Content="敌人数据/地图事件数据"/>
                     </ComboBox>
                 </Grid>
 
